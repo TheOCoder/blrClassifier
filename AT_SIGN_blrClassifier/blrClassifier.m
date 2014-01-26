@@ -1,6 +1,6 @@
 %BLRCLASSIFIER Bayesian Linear Regression Classifier object
 %   This is version 2014.01.26 - check for updates at:
-%   https://github.com/TheOCoder/blrClassifier
+%   https://github.com/TheOCoder/blrClassifier/releases
 %   You can click on "Download ZIP" to download all files and folders as a
 %   zip file and rename the AT_SIGN_blrClassifier to @blrClassifier
 %   Or better yet(!), download this file blrClassifier.zip from the above address
