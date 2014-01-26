@@ -1,6 +1,6 @@
 %BLRCLASSIFIER Bayesian Linear Regression Classifier object
 %   This is version 2014.01.26 - check for updates at:
-%   https://github.com/TheOCoder/blrClassifier/
+%   http://ee.sharif.edu/~omidsani/
 %   
 %   The update equations used in EM iterations are based on:
 %   P.-J. Kindermans, H. Verschore, and B. Schrauwen “A Unified Probabilistic Approach to Improve Spelling in an Event-related Potential Based Brain-computer Interface.”, Ieee Transactions on Biomedical Engineering, 2013
@@ -44,10 +44,13 @@
 %      testData = X; % A matrix containing test dataset - Num of columns (features)
 %      %    must be equal to number of trainData columns
 %      probabilities = CObj.classify(testData);
-%      %    probabilities will be a column vector with the same number of
-%      %    rows as the testData and each element will contain a number
+%      %    probabilities will be a matrix with a column for each class in the train data and
+%      %    vector with the same number of rows as the testData and each element will contain a number
 %      %    between 0 and 1 -> the probability that the class of the corresponding
-%      %    testData is '1'
+%      %    testData is the class related to that column. Columns are
+%      %    ordered with respect to their class labels: First column is the
+%      %    probability of class with label -1 and the second column is the
+%      %    probability of class with label +1
 %   
 %   
 %   Notice:
@@ -331,24 +334,29 @@ classdef blrClassifier < handle
             
 %             numOfClasses = length(obj.classLabels); % Not for unsupervised
             numOfClasses = 2;
-            probs = zeros(samples, numOfClasses);
+            classProbs = zeros(samples, numOfClasses);
             
             Y = X * obj.w;
 %             figure;p = linspace(-3,3,100);o1 = normpdf(p,obj.classes{1}.mu, 1 / obj.beta);o2 = normpdf(p,obj.classes{2}.mu, 1 / obj.beta);plot(p,o1,p,o2,p,o1./(o1+o2),p,o2./(o1+o2));
 %             figure;p = linspace(-3,3,100);o1 = obj.classes{1}.prior * normpdf(p,obj.classes{1}.mu, 1 / obj.beta);o2 = obj.classes{2}.prior * normpdf(p,obj.classes{2}.mu, 1 / obj.beta);plot(p,o1,p,o2,p,o1./(o1+o2),p,o2./(o1+o2));
             for i = 1:numOfClasses
-                probs(:,i) = obj.classes{i}.prior * normpdf(Y, obj.classes{i}.mu, 1 / obj.beta);
+                classProbs(:,i) = obj.classes{i}.prior * normpdf(Y, obj.classes{i}.mu, 1 / obj.beta);
+            end
+                        
+            classProbsCopy = classProbs;
+            for i = 1:numOfClasses
+                classProbs(:,i) = classProbsCopy(:,i) ./ sum(classProbsCopy(:,:), 2); % TO DO: check this
             end
             
-            probsCopy = probs;
-            probs(:,1) = probsCopy(:,1) ./ (probsCopy(:,1)+probsCopy(:,2));
-            probs(:,2) = probsCopy(:,2) ./ (probsCopy(:,1)+probsCopy(:,2));
+            classProbs(isnan(classProbs)) = 0; % TO DO: do something more logical!
+            illProbs = abs(sum(classProbs(:,:), 2) - 1) > 0.001;
+            classProbs(illProbs, :) = 0.5;
             
-            probs(isnan(probs)) = 0; % TO DO: do something more logical!
+            
             
 %             [probabilities probableClasses] = max(probs, [], 2);
             
-            probabilities = probs;
+            probabilities = classProbs;
             
 %             labels = obj.classLabels(probableClasses(:))';
 
