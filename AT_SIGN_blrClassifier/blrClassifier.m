@@ -1,7 +1,10 @@
 %BLRCLASSIFIER Bayesian Linear Regression Classifier object
 %   This is version 2014.01.26 - check for updates at:
 %   https://github.com/TheOCoder/blrClassifier
-%   You can click on "Download ZIP" to download all files and folders as a zip file
+%   You can click on "Download ZIP" to download all files and folders as a
+%   zip file and rename the AT_SIGN_blrClassifier to @blrClassifier
+%   Or better yet(!), download this file blrClassifier.zip from the above address
+%   
 %   
 %   The update equations used in EM iterations are based on:
 %   P.-J. Kindermans, H. Verschore, and B. Schrauwen “A Unified Probabilistic Approach to Improve Spelling in an Event-related Potential Based Brain-computer Interface.”, Ieee Transactions on Biomedical Engineering, 2013
