@@ -41,6 +41,7 @@ testDataAverages = [2; 2; 2; 1; 1; 1; 3; 4; 5; 0; -1; -2];
 testData = repmat(testDataAverages, 1, numOfFeatures)  + ones(length(testDataAverages), numOfFeatures) .* randn(length(testDataAverages), numOfFeatures);
 probabilities = blrClassifierObject.classify(testData);
 
+disp(probabilities);
 % probabilities =
 % 
 %          0    1.0000
